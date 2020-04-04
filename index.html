@@ -1,3 +1,54 @@
-<h1>Arquivo Recebido!</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSockets</title>
+</head>
+<body>
+    <label >Nome do Usuário:</label>
+    <input type="text" id="name"/>
+    <br>
+    <br>
+    <br>
+    <br>
+    <label>Mensagen:</label>
+    <textarea id="message" cols="100" rows="5" onkeypress="sendMessage()"></textarea>
 
-<a href="teste.html">Teste</a>
+    <br>
+    <br>
+    <br>
+    <br>
+    <label>Conversa:</label>
+    <div id="messages" style="white-space:pre-line;"></div>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.5/socket.io.min.js"></script>
+    
+    <script>
+        var socket = io('http://localhost:3000');
+        socket.on('server_hello', receiveMessage);
+
+        function sendMessage(){
+            if(event.keyCode ===13 ){
+                var name = document.getElementById('name').value;
+                var text = document.getElementById('message').value;
+
+                document.getElementById('message').value = "";
+
+                socket.emit('client_hello', {name, text});
+            }
+        }
+        function receiveMessage(data){
+            var element = document.getElementById('messages');
+            element.innerText += `                
+                   ${data.name} : ${data.text}                
+                `;
+        }
+
+
+    </script>
+
+
+</body>
+</html>

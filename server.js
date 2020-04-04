@@ -1,25 +1,12 @@
-///Criando Servidor///
+///  Instalar ---> npm i socket.io ////
 
-var http = require('http');
-var fs = require('fs');
-var url = require('url');
+var io = require('socket.io')(3000)  // 3000 é a porta que var usar ///
 
-var server = http.createServer(function(requeste, response){
-    var url_parts = url.parse(requeste.url);
-    var path = url_parts.pathname;
-    console.log(path);
+io.on('connection', (socket)=>{
+    console.log('novo usuario conectado');
 
-    fs.readFile(__dirname + path, function(err,data){
-        if(err){
-            response.writeHead(404, {'Content-Type': 'text/html'});
-            response.write('Not Found');
-        }else{
-            response.writeHead(200, {'Content-Type': 'text/html'});
-            response.write(data);
-        }
-        response.end();
+    socket.on('client_hello', (data)=>{
+        io.sockets.emit('server_hello', data); //todos usuarios recebe a msg
     })
 
-
 });
-server.listen(3000);
